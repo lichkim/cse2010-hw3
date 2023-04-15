@@ -107,8 +107,16 @@ public class DLinkedList<T> {
      * @return the info of the removed node
      */
     public T removeFirst() {
-        /**/
-        return null;
+        if (isEmpty()) {
+            return null;
+        } else {
+            Node<T> firstNode = header.getNext();
+            Node<T> nextNode = firstNode.getNext();
+            header.setNext(nextNode);
+            nextNode.setPrev(header);
+            size--;
+            return firstNode.getItem();
+        }
     }
 
     /**
@@ -116,8 +124,16 @@ public class DLinkedList<T> {
      * @return the info of the removed node
      */
     public T removeLast() {
-        /**/
-        return null;
+        if (isEmpty()) {
+            return null;
+        } else {
+            Node<T> lastNode = trailer.getPrev();
+            Node<T> prevNode = lastNode.getPrev();
+            trailer.setPrev(prevNode);
+            prevNode.setNext(trailer);
+            size--;
+            return lastNode.getItem();
+        }
     }
 
     /**
@@ -126,7 +142,12 @@ public class DLinkedList<T> {
      * @param n the node to add
      */
     public void addAfter(Node<T> p, Node<T> n) {
-       /**/
+       Node<T> temp = p.getNext();
+       n.setNext(temp);
+       n.setPrev(p);
+       p.setNext(n);
+       temp.setPrev(n);
+       size++;
     }
 
     /**
@@ -135,7 +156,12 @@ public class DLinkedList<T> {
      * @param n the node to add
      */
     public void addBefore(Node<T> p, Node<T> n) {
-        /**/
+        Node<T> temp = p.getPrev();
+        p.setPrev(n);
+        n.setPrev(temp);
+        temp.setNext(n);
+        n.setNext(p);
+        size++;
     }
 
     /**
@@ -145,7 +171,23 @@ public class DLinkedList<T> {
      */
     public T remove(Node<T> n) {
         /**/
-        return null;
+        if (n == header.getNext()) {
+            return removeFirst();
+        } else if (n == trailer.getPrev()) {
+            return removeLast();
+        } else {
+            try {
+                Node<T> prev = n.getPrev();
+                Node<T> next = n.getNext();
+                prev.setNext(next);
+                next.setPrev(prev);
+                size--;
+                return n.getItem();
+            } catch (Exception e) {
+                e.printStackTrace();
+                throw e;
+            }
+        }
     }
 
     /**
@@ -178,6 +220,13 @@ public class DLinkedList<T> {
     public Node<T> find(T value /* may declare more parameters, if needed */) {
 
         /**/
+        Node<T> pointer = header;
+        while (pointer.getNext() == null) {
+            if (pointer.getItem().equals(value)) {
+                return pointer;
+            }
+            pointer = pointer.getNext();
+        }
         return null;
     }
 }
